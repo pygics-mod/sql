@@ -31,6 +31,6 @@ class Mysql:
         self.proto = 'mysql://%s:%s@%s' % (username, password, host)
         self.engine = create_engine(self.proto)
         self.engine.execute('select 1').scalar()
-        self.engine.execute('CREATE DATABASE IF NOT EXISTS %s CHARACTER SET utf8;' % name)
-        self.engine.execute('use %s;' % name)
+        self.engine.execute("CREATE DATABASE IF NOT EXISTS '%s' CHARACTER SET utf8;" % name)
+        self.engine.execute("use '%s';" % name)
         self.session = sessionmaker(bind=self.engine)()
