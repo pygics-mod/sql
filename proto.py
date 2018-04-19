@@ -26,9 +26,10 @@ class File:
 
 class Mysql:
     
-    def __init__(self, host, username, password):
+    def __init__(self, host, username, password, root_name=''):
         _, name = pmd()
-        name = name.replace('.', '_')
+        name = name.replace('.', '_') 
+        if root_name: name = '%s_%s' % (root_name, name)
         self.proto = 'mysql://%s:%s@%s' % (username, password, host)
         self.engine = create_engine(self.proto)
         self.engine.execute('select 1').scalar()
