@@ -36,41 +36,62 @@ class Model(Base):
     
     @classmethod
     def get(cls, id):
-        return cls.__db__._sql_session.query(cls).get(id)
+        try:
+            with cls.__db__._sql_session.begin():
+                return cls.__db__._sql_session.query(cls).get(id)
+        except Exception as e: raise e
     
     @classmethod
     def one(cls, *clause):
-        result = cls.__db__._sql_session.query(cls)
+        try:
+            with cls.__db__._sql_session.begin():
+                result = cls.__db__._sql_session.query(cls)
+        except Exception as e: raise e
         for c in clause: result = result.filter(c)
         try: return result.first()
         except: return None
     
     @classmethod
     def list(cls, *clause):
-        result = cls.__db__._sql_session.query(cls)
+        try:
+            with cls.__db__._sql_session.begin():
+                result = cls.__db__._sql_session.query(cls)
+        except Exception as e: raise e
         for c in clause: result = result.filter(c)
         return result
     
     @classmethod
     def count(cls, *clause):
-        result = cls.__db__._sql_session.query(cls)
+        try:
+            with cls.__db__._sql_session.begin():
+                result = cls.__db__._sql_session.query(cls)
+        except Exception as e: raise e
         for c in clause: result = result.filter(c)
         return result.count()
     
     def create(self):
-        self.__class__.__db__._sql_session.add(self)
-        self.__class__.__db__._sql_session.commit()
-        return self
+        try:
+            with self.__class__.__db__._sql_session.begin():
+                self.__class__.__db__._sql_session.add(self)
+                # self.__class__.__db__._sql_session.commit()
+                return self
+        except Exception as e: raise e
         
     def update(self, **keyval):
-        for key, val in keyval.items(): self.__setattr__(key, val)
-        self.__class__.__db__._sql_session.commit()
-        return self
+        try:
+            with self.__class__.__db__._sql_session.begin():
+                for key, val in keyval.items(): self.__setattr__(key, val)
+                # self.__class__.__db__._sql_session.commit()
+                return self
+        except Exception as e: raise e
     
     def delete(self):
-        self.__class__.__db__._sql_session.delete(self)
-        self.__class__.__db__._sql_session.commit()
-        return self
+        try:
+            with self.__class__.__db__._sql_session.begin():
+                self.__class__.__db__._sql_session.delete(self)
+                # self.__class__.__db__._sql_session.commit()
+                return self
+        except Exception as e: raise e
 
 def model(sql):
     def wrapper(scheme):

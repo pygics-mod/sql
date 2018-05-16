@@ -13,7 +13,7 @@ class Memory:
         self.proto = 'sqlite:///:memory:'
         self.engine = create_engine(self.proto)
         self.engine.execute('select 1').scalar()
-        self.session = sessionmaker(bind=self.engine)()
+        self.session = sessionmaker(bind=self.engine, autocommit=True)()
 
 class File:
     
@@ -22,7 +22,7 @@ class File:
         self.proto = 'sqlite:///%s/%s.db' % (ENV.DIR.SVC, name)
         self.engine = create_engine(self.proto)
         self.engine.execute('select 1').scalar()
-        self.session = sessionmaker(bind=self.engine)()
+        self.session = sessionmaker(bind=self.engine, autocommit=True)()
 
 class Mysql:
     
@@ -35,4 +35,4 @@ class Mysql:
         self.engine.execute('select 1').scalar()
         self.engine.execute("CREATE DATABASE IF NOT EXISTS %s CHARACTER SET utf8;" % name)
         self.engine.execute("use %s;" % name)
-        self.session = sessionmaker(bind=self.engine)()
+        self.session = sessionmaker(bind=self.engine, autocommit=True)()
