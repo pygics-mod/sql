@@ -34,67 +34,132 @@ class Model(Base):
     @classmethod
     def get(cls, id):
         try:
-            session = cls.__db__._sql_proto.session()
-            with session.begin(): return session.query(cls).get(id)
+            try:
+                session = cls.__db__._sql_proto.session()
+                ret = session.query(cls).get(id)
+                session.commit()
+            except:
+                session = cls.__db__._sql_proto.refresh()
+                ret = session.query(cls).get(id)
+                session.commit()
+#             with session.begin(): return session.query(cls).get(id)
         except Exception as e:
-            print str(e)
-            return None
+            print type(e), str(e)
+            ret = None
+        return ret
     
     @classmethod
     def one(cls, *clause):
         try:
-            session = cls.__db__._sql_proto.session()
-            with session.begin():
+            try:
+                session = cls.__db__._sql_proto.session()
                 query = session.query(cls)
                 for c in clause: query = query.filter(c)
-                return query.first()
+                ret = query.first()
+                session.commit()
+            except:
+                session = cls.__db__._sql_proto.refresh()
+                query = session.query(cls)
+                for c in clause: query = query.filter(c)
+                ret = query.first()
+                session.commit()
+#             with session.begin():
+#                 query = session.query(cls)
+#                 for c in clause: query = query.filter(c)
+#                 return query.first()
         except Exception as e:
-            print str(e)
-            return None
+            print type(e), str(e)
+            ret = None
+        return ret
     
     @classmethod
     def list(cls, *clause):
         try:
-            session = cls.__db__._sql_proto.session()
-            with session.begin():
+            try:
+                session = cls.__db__._sql_proto.session()
                 query = session.query(cls)
                 for c in clause: query = query.filter(c)
-                return query
+                ret = query
+                session.commit()
+            except:
+                session = cls.__db__._sql_proto.refresh()
+                query = session.query(cls)
+                for c in clause: query = query.filter(c)
+                ret = query
+                session.commit()
+#             with session.begin():
+#                 query = session.query(cls)
+#                 for c in clause: query = query.filter(c)
+#                 return query
         except Exception as e:
-            print str(e)
-            return []
+            print type(e), str(e)
+            ret = []
+        return ret
             
     @classmethod
     def count(cls, *clause):
         try:
-            session = cls.__db__._sql_proto.session()
-            with session.begin():
+            try:
+                session = cls.__db__._sql_proto.session()
                 query = session.query(cls)
                 for c in clause: query = query.filter(c)
-                return query.count()
+                ret = query.count()
+                session.commit()
+            except:
+                session = cls.__db__._sql_proto.refresh()
+                query = session.query(cls)
+                for c in clause: query = query.filter(c)
+                ret = query.count()
+                session.commit()
+#             with session.begin():
+#                 query = session.query(cls)
+#                 for c in clause: query = query.filter(c)
+#                 return query.count()
         except Exception as e:
-            print str(e)
-            return None
+            print type(e), str(e)
+            ret = 0
+        return ret
     
     def create(self):
         try:
-            session = self.__class__.__db__._sql_proto.session()
-            with session.begin(): session.add(self)
-        except Exception as e: print str(e)
+            try:
+                session = self.__class__.__db__._sql_proto.session()
+                session.add(self)
+                session.commit()
+            except:
+                session = self.__class__.__db__._sql_proto.refresh()
+                session.add(self)
+                session.commit()
+#             with session.begin(): session.add(self)
+        except Exception as e: print type(e), str(e)
         return self
         
     def update(self, **keyval):
         try:
-            session = self.__class__.__db__._sql_proto.session()
-            with session.begin():
+            try:
+                session = self.__class__.__db__._sql_proto.session()
                 for key, val in keyval.items(): self.__setattr__(key, val)
+                session.commit()
+            except:
+                session = self.__class__.__db__._sql_proto.refresh()
+                for key, val in keyval.items(): self.__setattr__(key, val)
+                session.commit()
+#             with session.begin():
+#                 for key, val in keyval.items(): self.__setattr__(key, val)
         except Exception as e: print str(e)
         return self
     
     def delete(self):
         try:
-            session = self.__class__.__db__._sql_proto.session()
-            with session.begin(): session.delete(self)
+            try:
+                session = self.__class__.__db__._sql_proto.session()
+                session.delete(self)
+                session.commit()
+            except:
+                session = self.__class__.__db__._sql_proto.refresh()
+                session.delete(self)
+                session.commit()
+#             with session.begin(): session.delete(self)
         except Exception as e: print str(e)
         return self
 
