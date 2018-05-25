@@ -7,7 +7,7 @@ Created on 2017. 10. 25.
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-class __PROTO__:
+class __sql_proto__:
     
     def __init__(self):
         self.smaker = sessionmaker(bind=self.engine)
@@ -24,24 +24,24 @@ class __PROTO__:
         self._session = self.smaker()
         return self._session
 
-class Memory(__PROTO__):
+class Memory(__sql_proto__):
         
     def __init__(self):
         self.proto = 'sqlite:///:memory:'
         self.engine = create_engine(self.proto)
         self.engine.execute('select 1').scalar()
-        __PROTO__.__init__(self)
+        __sql_proto__.__init__(self)
 
-class File(__PROTO__):
+class File(__sql_proto__):
     
     def __init__(self):
         _, name = pmd()
         self.proto = 'sqlite:///%s/%s.db' % (ENV.DIR.SVC, name)
         self.engine = create_engine(self.proto)
         self.engine.execute('select 1').scalar()
-        __PROTO__.__init__(self)
+        __sql_proto__.__init__(self)
     
-class Mysql(__PROTO__):
+class Mysql(__sql_proto__):
     
     def __init__(self, host, username, password, root_name=''):
         _, name = pmd()
@@ -52,4 +52,4 @@ class Mysql(__PROTO__):
         self.engine.execute('select 1').scalar()
         self.engine.execute("CREATE DATABASE IF NOT EXISTS %s CHARACTER SET utf8;" % name)
         self.engine.execute("use %s;" % name)
-        __PROTO__.__init__(self)
+        __sql_proto__.__init__(self)
