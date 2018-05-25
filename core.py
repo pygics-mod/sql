@@ -34,7 +34,7 @@ class Model(Base):
     @classmethod
     def get(cls, id):
         try:
-            session = cls.__db__.sql_proto.session()
+            session = cls.__db__._sql_proto.session()
             with session.begin(): return session.query(cls).get(id)
         except Exception as e:
             print str(e)
@@ -43,7 +43,7 @@ class Model(Base):
     @classmethod
     def one(cls, *clause):
         try:
-            session = cls.__db__.sql_proto.session()
+            session = cls.__db__._sql_proto.session()
             with session.begin():
                 query = session.query(cls)
                 for c in clause: query = query.filter(c)
@@ -55,7 +55,7 @@ class Model(Base):
     @classmethod
     def list(cls, *clause):
         try:
-            session = cls.__db__.sql_proto.session()
+            session = cls.__db__._sql_proto.session()
             with session.begin():
                 query = session.query(cls)
                 for c in clause: query = query.filter(c)
@@ -67,7 +67,7 @@ class Model(Base):
     @classmethod
     def count(cls, *clause):
         try:
-            session = cls.__db__.sql_proto.session()
+            session = cls.__db__._sql_proto.session()
             with session.begin():
                 query = session.query(cls)
                 for c in clause: query = query.filter(c)
@@ -78,14 +78,14 @@ class Model(Base):
     
     def create(self):
         try:
-            session = self.__class__.__db__.sql_proto.session()
+            session = self.__class__.__db__._sql_proto.session()
             with session.begin(): session.add(self)
         except Exception as e: print str(e)
         return self
         
     def update(self, **keyval):
         try:
-            session = self.__class__.__db__.sql_proto.session()
+            session = self.__class__.__db__._sql_proto.session()
             with session.begin():
                 for key, val in keyval.items(): self.__setattr__(key, val)
         except Exception as e: print str(e)
@@ -93,7 +93,7 @@ class Model(Base):
     
     def delete(self):
         try:
-            session = self.__class__.__db__.sql_proto.session()
+            session = self.__class__.__db__._sql_proto.session()
             with session.begin(): session.delete(self)
         except Exception as e: print str(e)
         return self
