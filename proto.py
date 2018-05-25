@@ -32,7 +32,7 @@ class Memory(__PROTO__):
         self.engine.execute('select 1').scalar()
         __PROTO__.__init__(self)
 
-class File:
+class File(__PROTO__):
     
     def __init__(self):
         _, name = pmd()
@@ -41,7 +41,7 @@ class File:
         self.engine.execute('select 1').scalar()
         __PROTO__.__init__(self)
     
-class Mysql:
+class Mysql(__PROTO__):
     
     def __init__(self, host, username, password, root_name=''):
         _, name = pmd()
