@@ -101,6 +101,6 @@ class Model(Base):
 def model(sql):
     def wrapper(scheme):
         scheme.__db__ = sql
-        scheme.__table__.create(sql._sql_engine, checkfirst=True)
+        scheme.__table__.create(sql._sql_proto.engine, checkfirst=True)
         return scheme
     return wrapper
