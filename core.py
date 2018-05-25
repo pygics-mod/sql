@@ -62,7 +62,7 @@ class Model(Base):
                 return query
         except Exception as e:
             print str(e)
-            return None
+            return []
             
     @classmethod
     def count(cls, *clause):
